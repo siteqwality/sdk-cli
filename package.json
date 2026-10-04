@@ -1,6 +1,28 @@
 {
-  "name": "siteqwality-tooling", "private": true, "type": "module",
-  "workspaces": ["packages/*"], "engines": {"node": ">=22"},
-  "scripts": {"test": "node --test tests/*.test.js", "check": "npm test && npm run check:types", "check:types": "tsc -p tests/tsconfig.json", "pack:check": "npm pack --dry-run --workspace @siteqwality/cli && npm pack --dry-run --workspace @siteqwality/unplugin"},
-  "devDependencies": {"@jridgewell/trace-mapping": "^0.3.31", "@types/node": "^22.0.0", "esbuild": "^0.25.0", "rollup": "^4.50.0", "vite": "^7.1.0", "webpack": "^5.100.0", "typescript": "^5.9.0"}
+  "name": "siteqwality-tooling",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --import ./tests/offline.js --test tests/*.test.js",
+    "check": "npm test && npm run check:types && npm run format:check",
+    "check:types": "tsc -p tests/tsconfig.json",
+    "pack:check": "npm pack --dry-run --workspace @siteqwality/cli && npm pack --dry-run --workspace @siteqwality/unplugin",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@jridgewell/trace-mapping": "^0.3.31",
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "prettier": "3.6.2",
+    "rollup": "^4.50.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0",
+    "webpack": "^5.100.0"
+  }
 }
