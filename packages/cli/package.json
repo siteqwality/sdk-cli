@@ -1,0 +1,10 @@
+{
+  "name": "@siteqwality/cli", "version": "0.1.0", "description": "SiteQwality release and Debug ID source-map tooling",
+  "type": "module", "engines": {"node": ">=22"}, "license": "MIT",
+  "bin": {"siteqwality": "./bin/siteqwality.js"},
+  "exports": {".": {"types": "./src/index.d.ts", "import": "./src/index.js"}},
+  "files": ["src", "bin", "README.md", "LICENSE"],
+  "publishConfig": {"access": "public"},
+  "repository": {"type": "git", "url": "https://github.com/siteqwality/sdk-cli.git", "directory": "packages/cli"},
+  "dependencies": {"@ampproject/remapping": "^2.3.0", "acorn": "^8.15.0", "commander": "^14.0.0", "magic-string": "^0.30.19"}
+}
