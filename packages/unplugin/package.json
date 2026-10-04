@@ -1,10 +1,69 @@
 {
-  "name": "@siteqwality/unplugin", "version": "0.1.0", "description": "SiteQwality source maps for Vite, webpack, Rollup and esbuild",
-  "type": "module", "engines": {"node": ">=22"}, "license": "MIT",
-  "exports": {".": {"types": "./src/index.d.ts", "import": "./src/index.js"}, "./vite": {"types":"./src/vite.d.ts", "import":"./src/vite.js"}, "./rollup": {"types":"./src/rollup.d.ts", "import":"./src/rollup.js"}, "./webpack": {"types":"./src/webpack.d.ts", "import":"./src/webpack.js"}, "./esbuild": {"types":"./src/esbuild.d.ts", "import":"./src/esbuild.js"}},
-  "files": ["src", "README.md", "LICENSE"], "publishConfig": {"access": "public"},
-  "repository": {"type": "git", "url": "https://github.com/siteqwality/sdk-cli.git", "directory": "packages/unplugin"},
-  "dependencies": {"@siteqwality/cli": "0.1.0", "@rollup/plugin-replace": "^6.0.2"},
-  "peerDependencies": {"vite": ">=6 <9", "rollup": "^4.0.0", "webpack": "^5.0.0", "esbuild": ">=0.25 <1"},
-  "peerDependenciesMeta": {"vite":{"optional":true},"rollup":{"optional":true},"webpack":{"optional":true},"esbuild":{"optional":true}}
+  "name": "@siteqwality/unplugin",
+  "version": "0.1.0",
+  "description": "SiteQwality source maps for Vite, webpack, Rollup and esbuild",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./vite": {
+      "types": "./src/vite.d.ts",
+      "import": "./src/vite.js"
+    },
+    "./rollup": {
+      "types": "./src/rollup.d.ts",
+      "import": "./src/rollup.js"
+    },
+    "./webpack": {
+      "types": "./src/webpack.d.ts",
+      "import": "./src/webpack.js"
+    },
+    "./esbuild": {
+      "types": "./src/esbuild.d.ts",
+      "import": "./src/esbuild.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siteqwality/sdk-cli.git",
+    "directory": "packages/unplugin"
+  },
+  "dependencies": {
+    "@siteqwality/cli": "0.1.0",
+    "@rollup/plugin-replace": "^6.0.2"
+  },
+  "peerDependencies": {
+    "vite": ">=6 <9",
+    "rollup": "^4.0.0",
+    "webpack": "^5.0.0",
+    "esbuild": ">=0.25 <1"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "rollup": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    },
+    "esbuild": {
+      "optional": true
+    }
+  }
 }
