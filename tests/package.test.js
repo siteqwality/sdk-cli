@@ -31,25 +31,51 @@ test(
       assert.ok(manifest.files.some((file) => file.path === 'src/index.d.ts'));
       assert.ok(manifest.files.some((file) => file.path === 'LICENSE'));
       assert.ok(!manifest.files.some((file) => /tests|node_modules|\.test-output/.test(file.path)));
-      packed.push(path.join(dir, manifest.filename));
+      packed.push({ ...manifest, workspace: `packages/${name}` });
     }
     const consumer = path.join(dir, 'consumer');
     await mkdir(consumer);
+    // npm ci caches tarballs, but not necessarily registry metadata for a fresh solve.
+    // Reuse the committed dependency graph and replace only the workspace links with tarballs.
+    const sourceLock = JSON.parse(await readFile(path.join(root, 'package-lock.json'), 'utf8'));
+    const dependencies = Object.fromEntries(packed.map((p) => [p.name, `file:../${p.filename}`]));
+    const consumerPackage = {
+      name: 'packed-consumer',
+      private: true,
+      type: 'module',
+      dependencies,
+    };
+    const packages = Object.fromEntries(
+      Object.entries(sourceLock.packages).filter(
+        ([name, value]) => name.startsWith('node_modules/') && !value.link && !value.dev,
+      ),
+    );
+    packages[''] = { name: consumerPackage.name, dependencies };
+    for (const pack of packed) {
+      for (const [name, value] of Object.entries(sourceLock.packages)) {
+        if (name.startsWith(`${pack.workspace}/node_modules/`)) {
+          packages[name.replace(pack.workspace, `node_modules/${pack.name}`)] = value;
+        }
+      }
+      packages[`node_modules/${pack.name}`] = {
+        ...sourceLock.packages[pack.workspace],
+        resolved: dependencies[pack.name],
+        integrity: pack.integrity,
+      };
+    }
+    await writeFile(path.join(consumer, 'package.json'), JSON.stringify(consumerPackage));
     await writeFile(
-      path.join(consumer, 'package.json'),
-      JSON.stringify({ name: 'packed-consumer', private: true, type: 'module' }),
+      path.join(consumer, 'package-lock.json'),
+      JSON.stringify({
+        name: consumerPackage.name,
+        lockfileVersion: 3,
+        requires: true,
+        packages,
+      }),
     );
     await exec(
       'npm',
-      [
-        'install',
-        '--offline',
-        '--ignore-scripts',
-        '--no-audit',
-        '--no-fund',
-        '--legacy-peer-deps',
-        ...packed,
-      ],
+      ['ci', '--offline', '--ignore-scripts', '--no-audit', '--no-fund', '--legacy-peer-deps'],
       { cwd: consumer },
     );
     const { stdout } = await exec(
