@@ -125,6 +125,6 @@ test(
     const manifest = JSON.parse(
       await readFile(path.join(consumer, 'node_modules/@siteqwality/cli/package.json'), 'utf8'),
     );
-    assert.equal(manifest.version, '0.1.0');
+    assert.equal(manifest.version, '0.1.1');
   },
 );

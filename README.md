@@ -1,6 +1,6 @@
 # Site Qwality source-map tooling
 
-Development candidate for `@siteqwality/cli` and `@siteqwality/unplugin`, version 0.1.0. Requires Node.js 22 or newer. This repository adds build tooling for the Phase 4 source-map API contract. It does not deploy that backend or publish either npm package.
+Source-map tooling in `@siteqwality/cli` and `@siteqwality/unplugin`, version 0.1.1. Requires Node.js 22 or newer. This repository adds build tooling for the Phase 4 source-map API contract. It does not deploy that backend.
 
 - [CLI commands and upload contract](packages/cli/README.md)
 - [Vite, webpack, Rollup and esbuild adapters](packages/unplugin/README.md)
@@ -16,16 +16,16 @@ npm run pack:check
 
 Tests use loopback contract servers, gzip uploads and real bundler builds. The test runner rejects non-loopback fetches and clears inherited Site Qwality settings. No service credentials are needed. The packaging test installs both tarballs with npm's offline mode.
 
-To try the unpublished packages in another project:
+To try a local build of the packages in another project:
 
 ```sh
 npm pack --workspace @siteqwality/cli --pack-destination .test-output
 npm pack --workspace @siteqwality/unplugin --pack-destination .test-output
 # In the consumer project, pass both generated tarballs:
-npm install --save-dev /path/to/siteqwality-cli-0.1.0.tgz /path/to/siteqwality-unplugin-0.1.0.tgz
+npm install --save-dev /path/to/siteqwality-cli-0.1.1.tgz /path/to/siteqwality-unplugin-0.1.1.tgz
 ```
 
-The public npm install commands in the package READMEs apply after publication. Until then, use these tarballs.
+The package READMEs show the npm install commands for the published versions.
 
 ## Scope
 

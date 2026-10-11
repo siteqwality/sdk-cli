@@ -4,7 +4,7 @@ import { ApiClient, injectDirectory, uploadDirectory } from '../src/index.js';
 
 const program = new Command()
   .name('siteqwality')
-  .version('0.1.0')
+  .version('0.1.1')
   .description('Site Qwality Debug ID source maps and releases');
 const integer = (value) => {
   if (!/^\d+$/.test(value)) throw new InvalidArgumentError('Expected an integer');

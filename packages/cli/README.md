@@ -1,6 +1,6 @@
 # @siteqwality/cli
 
-Candidate version 0.1.0, Node.js 22+. Not published by this change. Use local tarballs until npm publication is authorized. After publication:
+Version 0.1.1, Node.js 22+. Install:
 
 ```sh
 npm install --save-dev @siteqwality/cli
