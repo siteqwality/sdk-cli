@@ -5,7 +5,7 @@ import { ApiClient, injectDirectory, uploadDirectory } from '../src/index.js';
 const program = new Command()
   .name('siteqwality')
   .version('0.1.0')
-  .description('SiteQwality Debug ID source maps and releases');
+  .description('Site Qwality Debug ID source maps and releases');
 const integer = (value) => {
   if (!/^\d+$/.test(value)) throw new InvalidArgumentError('Expected an integer');
   return Number(value);
@@ -13,7 +13,7 @@ const integer = (value) => {
 function authenticated(command) {
   return command
     .option('--app <uuid>', 'Application UUID', process.env.SITEQWALITY_APP_ID)
-    .option('--api-url <url>', 'SiteQwality API base URL', process.env.SITEQWALITY_API_URL)
+    .option('--api-url <url>', 'Site Qwality API base URL', process.env.SITEQWALITY_API_URL)
     .option('--retries <count>', 'Transient retries per request, 0 to 5', integer, 2)
     .option('--timeout <ms>', 'Request timeout, 1 to 300000 milliseconds', integer, 30000);
 }

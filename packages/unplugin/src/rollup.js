@@ -6,7 +6,7 @@ export function outputPlugin(options) {
     name: 'siteqwality-sourcemaps',
     outputOptions(output) {
       if (output.sourcemap === 'inline')
-        throw new Error('SiteQwality requires external source maps');
+        throw new Error('Site Qwality requires external source maps');
       return { ...output, sourcemap: output.sourcemap || true };
     },
     generateBundle: {

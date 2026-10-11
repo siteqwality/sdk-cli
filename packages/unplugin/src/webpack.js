@@ -11,7 +11,7 @@ export default function webpack(options) {
           compiler.options.devtool,
         )
       )
-        throw new Error('SiteQwality requires full external webpack source maps');
+        throw new Error('Site Qwality requires full external webpack source maps');
       compiler.hooks.thisCompilation.tap(name, (compilation) => {
         compilation.hooks.processAssets.tapPromise(
           { name, stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT },
