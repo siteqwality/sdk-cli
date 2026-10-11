@@ -1,4 +1,4 @@
-# SiteQwality source-map tooling
+# Site Qwality source-map tooling
 
 Development candidate for `@siteqwality/cli` and `@siteqwality/unplugin`, version 0.1.0. Requires Node.js 22 or newer. This repository adds build tooling for the Phase 4 source-map API contract. It does not deploy that backend or publish either npm package.
 
@@ -14,7 +14,7 @@ npm run check
 npm run pack:check
 ```
 
-Tests use loopback contract servers, gzip uploads and real bundler builds. The test runner rejects non-loopback fetches and clears inherited SiteQwality settings. No service credentials are needed. The packaging test installs both tarballs with npm's offline mode.
+Tests use loopback contract servers, gzip uploads and real bundler builds. The test runner rejects non-loopback fetches and clears inherited Site Qwality settings. No service credentials are needed. The packaging test installs both tarballs with npm's offline mode.
 
 To try the unpublished packages in another project:
 
@@ -35,7 +35,7 @@ The adapters use each bundler's native output hooks. They process final output b
 
 ## Output ordering
 
-Place the SiteQwality adapter after plugins that transform JavaScript or source maps. Run artifact signing, SRI generation and deployment against the final injected bytes. Injection happens after filename hashing, so emitted filenames retain the bundler's original hash. Do not run another minifier, banner injector or source-map rewriter afterward. Rebuild before changing an already injected artifact.
+Place the Site Qwality adapter after plugins that transform JavaScript or source maps. Run artifact signing, SRI generation and deployment against the final injected bytes. Injection happens after filename hashing, so emitted filenames retain the bundler's original hash. Do not run another minifier, banner injector or source-map rewriter afterward. Rebuild before changing an already injected artifact.
 
 Repeated clean builds of identical emitted JavaScript produce the same ID. Re-running CLI injection on its unchanged output is a no-op. Existing foreign IDs, edited registrations and changed injected code fail with a rebuild instruction. Flat version 3 external or hidden maps are supported; indexed and inline maps are rejected. Directory commands reject symlinks and references outside the selected output directory.
 

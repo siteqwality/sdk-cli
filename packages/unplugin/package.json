@@ -1,7 +1,7 @@
 {
   "name": "@siteqwality/unplugin",
   "version": "0.1.0",
-  "description": "SiteQwality source maps for Vite, webpack, Rollup and esbuild",
+  "description": "Site Qwality source maps for Vite, webpack, Rollup and esbuild",
   "type": "module",
   "engines": {
     "node": ">=22"
