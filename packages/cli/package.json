@@ -1,7 +1,7 @@
 {
   "name": "@siteqwality/cli",
-  "version": "0.1.1",
-  "description": "Site Qwality release and Debug ID source-map tooling",
+  "version": "0.1.2",
+  "description": "Site Qwality source maps, releases and incident tooling",
   "type": "module",
   "engines": {
     "node": ">=22"

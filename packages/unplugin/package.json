@@ -1,6 +1,6 @@
 {
   "name": "@siteqwality/unplugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Site Qwality source maps for Vite, webpack, Rollup and esbuild",
   "type": "module",
   "engines": {
@@ -43,7 +43,7 @@
     "directory": "packages/unplugin"
   },
   "dependencies": {
-    "@siteqwality/cli": "0.1.1",
+    "@siteqwality/cli": "0.1.2",
     "@rollup/plugin-replace": "^6.0.2"
   },
   "peerDependencies": {

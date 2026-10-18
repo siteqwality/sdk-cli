@@ -1,6 +1,6 @@
 # @siteqwality/cli
 
-Version 0.1.1, Node.js 22+. Install:
+Version 0.1.2, Node.js 22+. Install:
 
 ```sh
 npm install --save-dev @siteqwality/cli
@@ -25,6 +25,26 @@ npx siteqwality releases list
 Store the key in your CI secret store. Mutations require `write:rum`; release listing requires `read:rum`. The API enforces application ownership. `SITEQWALITY_API_URL` changes the API base, which defaults to `https://api.siteqwality.com`. HTTPS is required except for loopback test servers. The key is read from `SITEQWALITY_API_KEY` and is sent only to the configured API, never to storage PUT URLs. Redirects are not followed.
 
 Authenticated commands accept `--app <uuid>`, `--api-url <url>`, `--retries <count>` (default 2, range 0 to 5), and `--timeout <ms>` (default 30000, maximum 300000). Upload also accepts `--release <version>`, `--commit <sha>`, `--env <environment>`, `--concurrency <count>` (default 4, range 1 to 16), and `--delete-after`. Explicit flags override environment defaults. JSON results go to stdout, errors to stderr with exit code 1. Keys are intentionally not accepted as command-line flags.
+
+## Incidents
+
+Incident commands use an account API key with `read:incidents` for listing and `write:incidents` for changes. They do not need a RUM application or `--app`.
+
+```sh
+export SITEQWALITY_API_KEY='your-incident-api-key'
+npx siteqwality incidents list --status active --limit 50 --offset 0
+npx siteqwality incidents ack "$INCIDENT_ID" --by "$MEMBER_ID"
+npx siteqwality incidents resolve "$INCIDENT_ID" --message 'Service recovered'
+npx siteqwality incidents update "$INCIDENT_ID" --title 'Checkout unavailable' --severity critical
+npx siteqwality incidents update "$INCIDENT_ID" --service "$SERVICE_ID"
+npx siteqwality incidents update "$INCIDENT_ID" --clear-service
+```
+
+`list` defaults to active incidents and returns `{ data, total }` for one page. Status is `active`, `resolved` or `all`; limit is 1 to 100. Increase `--offset` to fetch later pages.
+
+`ack` requires `--by` because an API key does not identify a member. The server checks that the member belongs to the account. Acknowledgement stops escalation. `resolve` always posts a public resolution for published incidents and emails their subscribers by default; `--no-notify-subscribers` suppresses the email. `update` changes only the supplied title, severity or service, without setting lifecycle status. Moving an incident to a service can start its escalation policy.
+
+All four commands accept `--api-url`, `--timeout` and `--retries`. Only reads retry transient failures. Incident mutations make one request even if `--retries` is set, so an ambiguous failure cannot repeat a page or public update. Inspect the incident before retrying a failed mutation. HTTP 400, 403, 404 and 409 errors return a nonzero exit code without printing response bodies or the API key.
 
 Upload creates the release idempotently before presigning. With no release it uses the reserved `__debug_id__` release. `releases deploy <version>` requires an existing release and records server time. It does not deploy application files or configure the browser SDK's release value.
 

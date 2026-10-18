@@ -85,7 +85,7 @@ test(
         '-e',
         `
     import assert from 'node:assert/strict';
-    import { inject } from '@siteqwality/cli';
+    import { inject, IncidentClient } from '@siteqwality/cli';
     import * as adapters from '@siteqwality/unplugin';
     assert.ok(import.meta.resolve('@siteqwality/cli').includes('/consumer/node_modules/'));
     for (const name of ['vite','rollup','webpack','esbuild']) {
@@ -94,6 +94,7 @@ test(
     }
     const result = inject('void 0;', {version:3,sources:[],names:[],mappings:''});
     assert.equal(result.map.debugId, result.debugId);
+    assert.equal(typeof new IncidentClient({apiKey:'test-api-key'}).listIncidents, 'function');
     console.log('packed exports work');
   `,
       ],
@@ -104,6 +105,7 @@ test(
       cwd: consumer,
     });
     assert.match(help.stdout, /sourcemaps/);
+    assert.match(help.stdout, /incidents/);
     await writeFile(
       path.join(consumer, 'types.ts'),
       `import { vite, webpack, esbuild, rollup } from '@siteqwality/unplugin';\nvoid [vite({upload:false}),webpack(),esbuild(),rollup()];\n`,
@@ -125,6 +127,6 @@ test(
     const manifest = JSON.parse(
       await readFile(path.join(consumer, 'node_modules/@siteqwality/cli/package.json'), 'utf8'),
     );
-    assert.equal(manifest.version, '0.1.1');
+    assert.equal(manifest.version, '0.1.2');
   },
 );

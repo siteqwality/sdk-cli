@@ -9,13 +9,15 @@ export interface SourceMap {
   debugId?: string;
   [key: string]: unknown;
 }
-export interface ApiOptions {
-  app: string;
+export interface AccountApiOptions {
   apiKey: string;
   apiBase?: string;
   retries?: number;
   retryDelayMs?: number;
   timeoutMs?: number;
+}
+export interface ApiOptions extends AccountApiOptions {
+  app: string;
 }
 export interface ReleaseMetadata {
   commit?: string;
@@ -91,6 +93,37 @@ export class ApiClient {
   presign(version: string, files: UploadFile[]): Promise<{ files: PresignedFile[] }>;
   confirm(ids: string[]): Promise<{ files: ConfirmedFile[] }>;
   put(url: string, headers: Record<string, string>, body: Uint8Array): Promise<void>;
+}
+
+export interface Incident {
+  id: string;
+  title: string;
+  severity: 'minor' | 'major' | 'critical';
+  status: 'investigating' | 'identified' | 'monitoring' | 'resolved';
+  responder_status: 'triggered' | 'acknowledged' | 'resolved';
+  service_id: string | null;
+  [key: string]: unknown;
+}
+export class IncidentClient {
+  constructor(options: AccountApiOptions);
+  listIncidents(options?: {
+    status?: 'active' | 'resolved' | 'all';
+    limit?: number;
+    offset?: number;
+  }): Promise<{ data: Incident[]; total: number }>;
+  acknowledgeIncident(id: string, acknowledgedBy: string): Promise<Incident>;
+  resolveIncident(
+    id: string,
+    options?: { message?: string; notifySubscribers?: boolean },
+  ): Promise<Incident>;
+  updateIncident(
+    id: string,
+    changes: {
+      title?: string;
+      severity?: 'minor' | 'major' | 'critical';
+      serviceId?: string | null;
+    },
+  ): Promise<Incident>;
 }
 
 export function sourceMapReference(code: string): string | undefined;

@@ -31,11 +31,10 @@ export class HttpError extends Error {
     this.retryAfter = retryAfter;
   }
 }
-export class ApiClient {
+export class AuthenticatedClient {
   constructor(options = {}) {
     const base = safeUrl(options.apiBase || 'https://api.siteqwality.com');
     if (base.search) throw new Error('API base must not contain query parameters');
-    if (!isUuid(options.app)) throw new Error('A valid application UUID is required');
     if (
       typeof options.apiKey !== 'string' ||
       !options.apiKey.trim() ||
@@ -43,7 +42,6 @@ export class ApiClient {
     )
       throw new Error('An API key is required');
     this.base = base.href.replace(/\/+$/, '');
-    this.app = options.app;
     this.key = options.apiKey;
     this.retries = options.retries ?? 2;
     this.retryDelayMs = options.retryDelayMs ?? 500;
@@ -55,7 +53,7 @@ export class ApiClient {
     if (!Number.isInteger(this.timeoutMs) || this.timeoutMs < 1 || this.timeoutMs > 300_000)
       throw new Error('Invalid request timeout');
   }
-  async request(url, init, json = false) {
+  async request(url, init, json = false, retries = this.retries) {
     for (let attempt = 0; ; attempt++) {
       try {
         const response = await fetch(url, {
@@ -75,13 +73,13 @@ export class ApiClient {
         }
         const body = await response.json();
         if (!body || !Object.hasOwn(body, 'data')) throw new Error('Invalid API response envelope');
-        return body.data;
+        return json === 'envelope' ? body : body.data;
       } catch (err) {
         const transient =
           err instanceof HttpError
             ? [408, 429].includes(err.status) || err.status >= 500
             : err instanceof TypeError || err.name === 'TimeoutError';
-        if (!transient || attempt >= this.retries) {
+        if (!transient || attempt >= retries) {
           if (err instanceof HttpError) throw err;
           throw new Error('Request failed or returned an invalid response');
         }
@@ -98,16 +96,27 @@ export class ApiClient {
       }
     }
   }
-  api(suffix, method = 'GET', body) {
+  accountApi(path, method = 'GET', body, envelope = false, retries = this.retries) {
     return this.request(
-      `${this.base}/rum/${this.app}${suffix}`,
+      `${this.base}${path}`,
       {
         method,
         headers: { Authorization: `Bearer ${this.key}`, 'Content-Type': 'application/json' },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       },
-      true,
+      envelope ? 'envelope' : true,
+      retries,
     );
+  }
+}
+export class ApiClient extends AuthenticatedClient {
+  constructor(options = {}) {
+    if (!isUuid(options.app)) throw new Error('A valid application UUID is required');
+    super(options);
+    this.app = options.app;
+  }
+  api(suffix, method = 'GET', body) {
+    return this.accountApi(`/rum/${this.app}${suffix}`, method, body);
   }
   async createRelease(version, { commit, env } = {}) {
     releaseName(version);

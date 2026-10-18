@@ -1,21 +1,27 @@
 #!/usr/bin/env node
 import { Command, InvalidArgumentError } from 'commander';
-import { ApiClient, injectDirectory, uploadDirectory } from '../src/index.js';
+import { ApiClient, IncidentClient, injectDirectory, uploadDirectory } from '../src/index.js';
 
 const program = new Command()
   .name('siteqwality')
-  .version('0.1.1')
-  .description('Site Qwality Debug ID source maps and releases');
+  .version('0.1.2')
+  .description('Site Qwality source maps, releases and incidents');
 const integer = (value) => {
   if (!/^\d+$/.test(value)) throw new InvalidArgumentError('Expected an integer');
   return Number(value);
 };
-function authenticated(command) {
+function accountAuthenticated(command) {
   return command
-    .option('--app <uuid>', 'Application UUID', process.env.SITEQWALITY_APP_ID)
     .option('--api-url <url>', 'Site Qwality API base URL', process.env.SITEQWALITY_API_URL)
     .option('--retries <count>', 'Transient retries per request, 0 to 5', integer, 2)
     .option('--timeout <ms>', 'Request timeout, 1 to 300000 milliseconds', integer, 30000);
+}
+function authenticated(command) {
+  return accountAuthenticated(command).option(
+    '--app <uuid>',
+    'Application UUID',
+    process.env.SITEQWALITY_APP_ID,
+  );
 }
 function options(command) {
   return {
@@ -67,6 +73,53 @@ authenticated(
 authenticated(releases.command('list').description('List releases, newest created first')).action(
   async (opts) => print(await new ApiClient(options(opts)).listReleases()),
 );
+const incidents = program.command('incidents').description('List and manage account incidents');
+accountAuthenticated(
+  incidents.command('list').description('List one page, with the total matching count'),
+)
+  .option('--status <status>', 'active, resolved or all', 'active')
+  .option('--limit <count>', 'Page size, 1 to 100', integer, 50)
+  .option('--offset <count>', 'Row offset', integer, 0)
+  .action(async (opts) => print(await new IncidentClient(options(opts)).listIncidents(opts)));
+accountAuthenticated(
+  incidents
+    .command('ack <incident>')
+    .description('Acknowledge as an account member and stop escalation'),
+)
+  .requiredOption('--by <uuid>', 'Acknowledging member UUID, required for API keys')
+  .action(async (id, opts) =>
+    print(await new IncidentClient(options(opts)).acknowledgeIncident(id, opts.by)),
+  );
+accountAuthenticated(
+  incidents
+    .command('resolve <incident>')
+    .description('Resolve; published incidents get a public resolution'),
+)
+  .option('--message <text>', 'Public resolution text')
+  .option(
+    '--no-notify-subscribers',
+    'Suppress subscriber email; the public resolution is still posted',
+  )
+  .action(async (id, opts) =>
+    print(await new IncidentClient(options(opts)).resolveIncident(id, opts)),
+  );
+accountAuthenticated(
+  incidents.command('update <incident>').description('Change title, severity or service'),
+)
+  .option('--title <text>', 'Incident title')
+  .option('--severity <severity>', 'minor, major or critical')
+  .option('--service <uuid>', 'Move to a service, which may start paging')
+  .option('--clear-service', 'Detach the incident from its service')
+  .action(async (id, opts) => {
+    if (opts.service && opts.clearService) throw new Error('Choose --service or --clear-service');
+    print(
+      await new IncidentClient(options(opts)).updateIncident(id, {
+        title: opts.title,
+        severity: opts.severity,
+        serviceId: opts.clearService ? null : opts.service,
+      }),
+    );
+  });
 try {
   await program.parseAsync();
 } catch (error) {
