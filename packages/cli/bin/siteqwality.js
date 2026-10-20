@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 import { Command, InvalidArgumentError } from 'commander';
-import { ApiClient, IncidentClient, injectDirectory, uploadDirectory } from '../src/index.js';
+import {
+  ApiClient,
+  IncidentClient,
+  OnCallClient,
+  injectDirectory,
+  uploadDirectory,
+} from '../src/index.js';
 
 const program = new Command()
   .name('siteqwality')
   .version('0.1.2')
-  .description('Site Qwality source maps, releases and incidents');
+  .description('Site Qwality source maps, releases, incidents and on-call');
 const integer = (value) => {
   if (!/^\d+$/.test(value)) throw new InvalidArgumentError('Expected an integer');
   return Number(value);
@@ -120,6 +126,34 @@ accountAuthenticated(
       }),
     );
   });
+const oncall = program.command('oncall').description('See who is on call and when');
+accountAuthenticated(
+  oncall
+    .command('now')
+    .description('Who is on call now: every schedule, or one with its next shift'),
+)
+  .option('--schedule <uuid>', 'Only this schedule, with who is next')
+  .option('--at <time>', 'RFC 3339 instant instead of now')
+  .action(async (opts) =>
+    print(
+      await new OnCallClient(options(opts)).onCallNow({ scheduleId: opts.schedule, at: opts.at }),
+    ),
+  );
+accountAuthenticated(
+  oncall.command('shifts <schedule>').description("A schedule's shifts, gaps included"),
+)
+  .option('--since <time>', 'RFC 3339 start; defaults to now')
+  .option('--until <time>', 'RFC 3339 end; defaults to 14 days later, at most 90')
+  .action(async (schedule, opts) =>
+    print(await new OnCallClient(options(opts)).listShifts(schedule, opts)),
+  );
+accountAuthenticated(oncall.command('mine').description("A member's shifts across every schedule"))
+  .requiredOption('--user <uuid>', 'Member UUID, required for API keys')
+  .option('--since <time>', 'RFC 3339 start; defaults to now')
+  .option('--until <time>', 'RFC 3339 end; defaults to 14 days later, at most 90')
+  .action(async (opts) =>
+    print(await new OnCallClient(options(opts)).listMemberShifts(opts.user, opts)),
+  );
 try {
   await program.parseAsync();
 } catch (error) {

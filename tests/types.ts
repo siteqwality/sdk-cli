@@ -1,4 +1,4 @@
-import { inject, uploadMaps, ApiClient, IncidentClient } from '@siteqwality/cli';
+import { inject, uploadMaps, ApiClient, IncidentClient, OnCallClient } from '@siteqwality/cli';
 import { vite, rollup, webpack, esbuild, type Options } from '@siteqwality/unplugin';
 import siteqwalityVite from '@siteqwality/unplugin/vite';
 import siteqwalityRollup from '@siteqwality/unplugin/rollup';
@@ -33,3 +33,10 @@ void incidents.listIncidents({ status: 'open' });
 new ApiClient({ app: 'uuid' });
 // @ts-expect-error concurrency must be numeric.
 vite({ concurrency: 'four' });
+const oncall = new OnCallClient({ apiKey: 'secret' });
+void oncall.onCallNow();
+void oncall.onCallNow({ scheduleId: 'schedule', at: '2026-10-21T09:00:00Z' });
+void oncall.listShifts('schedule', { since: '2026-10-21T09:00:00Z' });
+void oncall.listMemberShifts('member');
+// @ts-expect-error a member's shifts need the member.
+void oncall.listMemberShifts();

@@ -126,4 +126,42 @@ export class IncidentClient {
   ): Promise<Incident>;
 }
 
+export interface OnCallShift {
+  schedule_id?: string;
+  schedule_name?: string;
+  user_id?: string;
+  source: 'override' | 'layer' | 'gap';
+  layer_id?: string;
+  layer_number?: number;
+  override_id?: string;
+  starts_at?: string;
+  ends_at?: string;
+}
+export interface OnCallNow {
+  schedule_id: string;
+  at: string;
+  timezone: string;
+  on_call: OnCallShift;
+  next?: OnCallShift;
+}
+export class OnCallClient {
+  constructor(options: AccountApiOptions);
+  onCallNow(options: { scheduleId: string; at?: string }): Promise<OnCallNow>;
+  onCallNow(options?: { at?: string }): Promise<OnCallShift[]>;
+  listShifts(
+    scheduleId: string,
+    range?: { since?: string; until?: string },
+  ): Promise<{
+    schedule_id: string;
+    since: string;
+    until: string;
+    timezone: string;
+    shifts: OnCallShift[];
+  }>;
+  listMemberShifts(
+    userId: string,
+    range?: { since?: string; until?: string },
+  ): Promise<OnCallShift[]>;
+}
+
 export function sourceMapReference(code: string): string | undefined;

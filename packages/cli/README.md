@@ -46,6 +46,20 @@ npx siteqwality incidents update "$INCIDENT_ID" --clear-service
 
 All four commands accept `--api-url`, `--timeout` and `--retries`. Only reads retry transient failures. Incident mutations make one request even if `--retries` is set, so an ambiguous failure cannot repeat a page or public update. Inspect the incident before retrying a failed mutation. HTTP 400, 403, 404 and 409 errors return a nonzero exit code without printing response bodies or the API key.
 
+## On-call
+
+On-call commands read schedules with an account API key that has `read:incidents`. They never change a schedule.
+
+```sh
+export SITEQWALITY_API_KEY='your-incident-api-key'
+npx siteqwality oncall now
+npx siteqwality oncall now --schedule "$SCHEDULE_ID" --at 2026-10-21T09:00:00Z
+npx siteqwality oncall shifts "$SCHEDULE_ID" --since 2026-10-21T00:00:00Z --until 2026-11-04T00:00:00Z
+npx siteqwality oncall mine --user "$MEMBER_ID"
+```
+
+`now` lists who is on call on every schedule, or, with `--schedule`, one schedule's current shift with who is next. `shifts` returns a schedule's timeline with overrides applied and gaps included, 14 days by default and at most 90. `mine` lists one member's shifts across every schedule for the next 14 days; `--user` is required because an API key does not identify a member. Times are RFC 3339.
+
 Upload creates the release idempotently before presigning. With no release it uses the reserved `__debug_id__` release. `releases deploy <version>` requires an existing release and records server time. It does not deploy application files or configure the browser SDK's release value.
 
 ## Injection
