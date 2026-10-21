@@ -42,7 +42,7 @@ npx siteqwality incidents update "$INCIDENT_ID" --clear-service
 
 `list` defaults to active incidents and returns `{ data, total }` for one page. Status is `active`, `resolved` or `all`; limit is 1 to 100. Increase `--offset` to fetch later pages.
 
-`ack` requires `--by` because an API key does not identify a member. The server checks that the member belongs to the account. Acknowledgement stops escalation. `resolve` always posts a public resolution for published incidents and emails their subscribers by default; `--no-notify-subscribers` suppresses the email. `update` changes only the supplied title, severity or service, without setting lifecycle status. Moving an incident to a service can start its escalation policy.
+`ack` requires `--by` because an API key does not identify a member. The server checks that the member belongs to the account. Acknowledgment stops escalation. `resolve` always posts a public resolution for published incidents and emails their subscribers by default; `--no-notify-subscribers` suppresses the email. `update` changes only the supplied title, severity or service, without setting lifecycle status. Moving an incident to a service can start its escalation policy.
 
 All four commands accept `--api-url`, `--timeout` and `--retries`. Only reads retry transient failures. Incident mutations make one request even if `--retries` is set, so an ambiguous failure cannot repeat a page or public update. Inspect the incident before retrying a failed mutation. HTTP 400, 403, 404 and 409 errors return a nonzero exit code without printing response bodies or the API key.
 

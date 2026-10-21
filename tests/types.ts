@@ -25,7 +25,7 @@ void incidents.listIncidents({ status: 'active', limit: 20 });
 void incidents.acknowledgeIncident('incident', 'member');
 void incidents.resolveIncident('incident', { notifySubscribers: false });
 void incidents.updateIncident('incident', { serviceId: null });
-// @ts-expect-error API-key acknowledgements require an explicit member.
+// @ts-expect-error API-key acknowledgments require an explicit member.
 void incidents.acknowledgeIncident('incident');
 // @ts-expect-error unknown incident status is not an unfiltered list.
 void incidents.listIncidents({ status: 'open' });
