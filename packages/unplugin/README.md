@@ -6,7 +6,7 @@ Version 0.1.3, Node.js 22+. Install:
 npm install --save-dev @siteqwality/unplugin
 ```
 
-Configure CI with `SITEQWALITY_APP_ID`, `SITEQWALITY_API_KEY`, and optionally `SITEQWALITY_RELEASE` and `SITEQWALITY_API_URL`. Upload is enabled by default and requires the deployed Phase 4 API contract. Use `upload: false` for local builds that only inject IDs.
+Configure CI with `SITEQWALITY_APP_ID`, `SITEQWALITY_API_KEY`, and optionally `SITEQWALITY_RELEASE` and `SITEQWALITY_API_URL`. Upload is enabled by default. Use `upload: false` for local builds that only inject IDs.
 
 ## Vite
 
@@ -85,4 +85,4 @@ Use `__SQ_RELEASE__` where you configure the SDK release, for example `release: 
 
 Place this adapter after JavaScript/map transforms. Run SRI/signing plugins after injection, or calculate integrity from the final files. Injection occurs after filename hashing and changes JavaScript bytes. Filenames retain their pre-injection hashes. Do not transform the injected output afterward. Each rebuild starts with the bundler's fresh output; no unrelated directories are scanned.
 
-These are native adapters tested with Vite 7, Rollup 4, webpack 5 and esbuild 0.25. The package name provides a common entry point, without depending on the `unplugin` abstraction. Live SDK-to-backend symbolication remains an integration release gate.
+These are native adapters tested with Vite 7, Rollup 4, webpack 5 and esbuild 0.25. The package name provides a common entry point, without depending on the `unplugin` abstraction.

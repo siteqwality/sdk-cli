@@ -72,7 +72,7 @@ Unchanged injected pairs can be processed repeatedly. If injected JavaScript cha
 
 ## Upload and deletion
 
-Uploads follow the Phase 4 API contract:
+Each upload runs these steps:
 
 1. Create the app-scoped release.
 2. Presign at most 50 maps per batch, with unique filenames and Debug IDs. Declare exact gzip byte sizes and JSON/gzip headers.
@@ -82,7 +82,7 @@ Uploads follow the Phase 4 API contract:
 
 Both raw JSON and gzip output are limited to 32 MiB per map. The client retries network failures, timeouts, HTTP 408/429 and 5xx responses with bounded backoff. It respects `Retry-After` up to 30 seconds and fails for longer requested waits. A storage 403 triggers a fresh presign and re-upload, bounded by `--retries`. Other permanent failures stop the command. An incomplete or mismatched presign/confirmation response fails closed. Failed uploads may leave pending server records; retrying gets new IDs. Earlier confirmed batches may remain ready, but no local map is removed when a later batch fails.
 
-Confirmation proves storage and metadata acceptance. It does not prove live symbolication. Backend deployment and an integrated SDK/API smoke test are separate release gates.
+Confirmation means the map is stored and its metadata accepted. To check symbolication end to end, open a new error from that release in Site Qwality.
 
 ## JavaScript API
 

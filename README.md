@@ -1,10 +1,9 @@
 # Site Qwality developer tooling
 
-Source-map tooling in `@siteqwality/cli` and `@siteqwality/unplugin`, version 0.1.3. The CLI also lists and manages incidents and shows who is on call through the account API. Requires Node.js 22 or newer. This repository adds build tooling for the Phase 4 source-map API contract. It does not deploy that backend.
+Source-map tooling in `@siteqwality/cli` and `@siteqwality/unplugin`, version 0.1.3. The CLI also lists and manages incidents and shows who is on call through the account API. Requires Node.js 22 or newer.
 
 - [CLI commands and upload contract](packages/cli/README.md)
 - [Vite, webpack, Rollup and esbuild adapters](packages/unplugin/README.md)
-- [Validation and release handoff](docs/release-handoff.md)
 
 ## Local development
 
