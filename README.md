@@ -1,6 +1,6 @@
 # Site Qwality developer tooling
 
-Source-map tooling in `@siteqwality/cli` and `@siteqwality/unplugin`, version 0.1.3. The CLI also lists and manages incidents and shows who is on call through the account API. Requires Node.js 22 or newer.
+Source-map tooling in `@siteqwality/cli` and `@siteqwality/unplugin`, version 0.1.4. The CLI also lists and manages incidents and shows who is on call through the account API. Requires Node.js 22 or newer.
 
 - [CLI commands and upload contract](packages/cli/README.md)
 - [Vite, webpack, Rollup and esbuild adapters](packages/unplugin/README.md)
@@ -21,7 +21,7 @@ To try a local build of the packages in another project:
 npm pack --workspace @siteqwality/cli --pack-destination .test-output
 npm pack --workspace @siteqwality/unplugin --pack-destination .test-output
 # In the consumer project, pass both generated tarballs:
-npm install --save-dev /path/to/siteqwality-cli-0.1.3.tgz /path/to/siteqwality-unplugin-0.1.3.tgz
+npm install --save-dev /path/to/siteqwality-cli-0.1.4.tgz /path/to/siteqwality-unplugin-0.1.4.tgz
 ```
 
 The package READMEs show the npm install commands for the published versions.

@@ -1,6 +1,6 @@
 # @siteqwality/unplugin
 
-Version 0.1.3, Node.js 22+. Install:
+Version 0.1.4, Node.js 22+. Install:
 
 ```sh
 npm install --save-dev @siteqwality/unplugin

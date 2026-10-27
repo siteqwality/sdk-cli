@@ -10,7 +10,7 @@ import {
 
 const program = new Command()
   .name('siteqwality')
-  .version('0.1.3')
+  .version('0.1.4')
   .description('Site Qwality source maps, releases, incidents and on-call');
 const integer = (value) => {
   if (!/^\d+$/.test(value)) throw new InvalidArgumentError('Expected an integer');
